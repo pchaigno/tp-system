@@ -1,0 +1,6 @@
+#include "semaphore.h"
+
+void main() {
+	int datash = shmget(2105, sizeof(int)*5, IPC_CREAT);
+	int * data = datash;
+}

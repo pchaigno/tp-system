@@ -85,16 +85,6 @@ int main(int argc, char * argv[]) {
 	int id = shmget(12345, sizeof(int)*taille, IPC_CREAT | 0777);
 	int* tab_p = (int*)shmat(id, NULL, 0); 
 	int tab[10] = {0, 2, 4, 3, 8, 9, 5, 1, 7, 6};
-	/*tab_p[0] = 0;
-	tab_p[1] = 2;
-	tab_p[2] = 4;
-	tab_p[3] = 3;
-	tab_p[4] = 8;
-	tab_p[5] = 9;
-	tab_p[6] = 5;
-	tab_p[7] = 1;
-	tab_p[8] = 7;
-	tab_p[9] = 6;*/
 	for(i=0; i<10; i++) {
 		tab_p[i] = tab[i];
 	}

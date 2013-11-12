@@ -2,8 +2,6 @@ package main;
 
 import java.util.LinkedList;
 
-import tests.TestThread;
-
 public class Semaphore {
 	private int i;
 	private static LinkedList<Thread> threads = new LinkedList<Thread>();
@@ -36,12 +34,11 @@ public class Semaphore {
 	}
 	
 	private void goToBed() {
-		System.out.println(((TestThread)Thread.currentThread()).getMessage()+" going down ("+this.i+").");
 		threads.add(Thread.currentThread());
 		try {
 			this.wait();
 		} catch (InterruptedException e) {
-			System.out.println(((TestThread)Thread.currentThread()).getMessage()+" waking up ("+this.i+").");
+			
 		}
 	}
 }

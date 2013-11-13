@@ -1,12 +1,11 @@
-package main;
+package probleme;
 
 public class Philosophe extends Thread {
 	private static final int NB_PHILOSOPHES = 10;
 	private static final int EAT_DURATION = 500;
 	private static final int THINK_DURATION = 1000;
 	private static final int NB_CYCLES = 3;
-	private static final int TAKE_BAGUETTE_DURATION = 0;
-	private static boolean[] freeBaguettes = new boolean[NB_PHILOSOPHES];
+	private static Baguette[] baguettes = new Baguette[NB_PHILOSOPHES];
 	private int num;
 	
 	public Philosophe(int i) {
@@ -16,16 +15,8 @@ public class Philosophe extends Thread {
 	@Override
 	public void run() {
 		for(int i=0; i<NB_CYCLES; i++) {
-			try {
-				while(!takeBaguette(this.num % NB_PHILOSOPHES)) {
-					this.wait();
-				}
-				while(!takeBaguette((this.num+1) % NB_PHILOSOPHES)) {
-					this.wait();
-				}
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+			baguettes[this.num].take();
+			baguettes[(this.num+1) % NB_PHILOSOPHES].take();
 			System.out.println("Philosophe "+this.num+" is eating...");
 			try {
 				Thread.sleep(EAT_DURATION);
@@ -33,7 +24,8 @@ public class Philosophe extends Thread {
 				e.printStackTrace();
 			}
 			
-			this.freeBaguettes();
+			baguettes[this.num].free();
+			baguettes[(this.num+1) % NB_PHILOSOPHES].free();
 			System.out.println("Philosophe "+this.num+" is now thinking...");
 			try {
 				Thread.sleep(THINK_DURATION);
@@ -43,32 +35,15 @@ public class Philosophe extends Thread {
 		}
 	}
 	
-	private static boolean takeBaguette(int baguette) throws InterruptedException {
-		if(freeBaguettes[baguette]) {
-			Thread.sleep(TAKE_BAGUETTE_DURATION);
-			freeBaguettes[baguette] = false;
-			return true;
-		}
-		return false;
-	}
-	
-	private void freeBaguettes() {
-		freeBaguettes[this.num % NB_PHILOSOPHES] = true;
-		freeBaguettes[(this.num+1) % NB_PHILOSOPHES] = true;
-		this.notifyAll();
-	}
-	
 	public static void main(String[] args) throws InterruptedException {
-		for(int i=0; i<NB_PHILOSOPHES; i++) {
-			Philosophe.freeBaguettes[i] = true;
-		}
 		Philosophe[] philosophes = new Philosophe[NB_PHILOSOPHES];
 		for(int i=0; i<NB_PHILOSOPHES; i++) {
+			Philosophe.baguettes[i] = new Baguette();
 			philosophes[i] = new Philosophe(i);
 		}
 		for(int i=0; i<NB_PHILOSOPHES; i++) {
 			philosophes[i].start();
-			Thread.sleep(100);
+			//Thread.sleep(50);
 		}
 		for(int i=0; i<NB_PHILOSOPHES; i++) {
 			philosophes[i].join();

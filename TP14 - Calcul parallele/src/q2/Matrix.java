@@ -1,8 +1,7 @@
 package q2;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 
 public class Matrix {
 	private int[][] matrixA;
